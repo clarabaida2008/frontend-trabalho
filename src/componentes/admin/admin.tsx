@@ -48,21 +48,7 @@ function Admin() {
         }
       })
   }
-  function adicionarItemCarrinho(produtoId:string){
-    api.post("/adicionarItem", {produtoId,quantidade:1})
-      .then(() => alert("Produto adicionado com sucesso!"))
-      .catch((error) => {
-        if (error.response) {
-          console.error(`Servidor respondeu mas com o erro:${error.response.data.mensagem ?? error.response.data}`)
-          alert(`Servidor respondeu mas com o erro:${error.response.data.mensagem
-            ?? " olhe o console do navegador para mais informações"}"`)
-        }
-        else { //Não teve resposta do servidor, então mostramos o erro do axios.
-          console.error(`Erro Axios: ${error.message}`)
-           alert(`Servidor não respondeu, você ligou o backend? Erro do Axios: ${error.message?? "Erro desconhecido: Chame o TERE"}`)
-        }
-      })
-  }
+  
 
   return (
     <>
@@ -87,7 +73,6 @@ function Admin() {
                 <img src={produto.urlfoto} alt='Imagem do produto' />
                 <p>Preço: {produto.preco}</p>
                 <p>Descrição: {produto.descricao}</p>
-                <button onClick={()=>adicionarItemCarrinho(produto._id)}>Adicionar ao Carrinho</button>
               </div>
             )
           })
