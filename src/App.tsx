@@ -29,6 +29,7 @@ function App() {
   // Estados
   const [produtos, setProdutos] = useState<ProdutoType[]>([]);
   const [carrinho, setCarrinho] = useState<CarrinhoType | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Busca os produtos cadastrados
   useEffect(() => {
@@ -79,6 +80,11 @@ function App() {
       });
   }
 
+  const produtosFiltrados = produtos.filter((p) => {
+    const term = searchTerm.toLowerCase();
+    return p.nome.toLowerCase().includes(term) || p.descricao.toLowerCase().includes(term);
+  });
+
   return (
     <>
       <div className="header">
@@ -89,9 +95,18 @@ function App() {
         {/* Seção de Produtos */}
         <section className="products-section">
           <h2 className="section-title">Nossos Produtos</h2>
+        {/* Campo de busca */}
+          <input
+            type="text"
+             className="search-input"
+            placeholder="Buscar pelo nome do produto"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+
           <div className="products-grid">
             {produtos.length > 0 ? (
-              produtos.map((produto) => (
+              produtosFiltrados.map((produto) => (
                 <div key={produto._id} className="product-card">
                   <img src={produto.urlfoto} alt={produto.nome} className="product-image" />
                   <div className="product-info">
@@ -159,5 +174,7 @@ function App() {
     </>
   );
 }
+
+
 
 export default App;
