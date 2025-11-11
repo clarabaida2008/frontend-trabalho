@@ -1,7 +1,6 @@
 import './App.css'
 import api from './api/api'
-import { jwtDecode } from "jwt-decode";
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 
 // Tipos

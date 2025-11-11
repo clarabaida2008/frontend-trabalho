@@ -557,31 +557,56 @@ html {
   }
 }
 
+/* === Ajuste dos controles de quantidade no carrinho === */
 .quantity-controls {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* alinha à direita */
-  gap: 8px;
-  margin-left: auto; /* empurra para a direita */
+  justify-content: flex-end; /* alinha à direita */
+  gap: 6px;
+  margin-left: auto;
+  margin-top: 6px;
 }
 
 .quantity-controls button {
-  width: 24px;
-  height: 24px;
-  font-size: 16px;
+  width: 26px;
+  height: 26px;
+  font-size: 15px;
+  border: none;
   border-radius: 5px;
+  background-color: #f0f0f0;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.quantity-controls button:hover {
+  background-color: #e0e0e0;
 }
 
 .quantity-controls span {
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 600;
   min-width: 20px;
   text-align: center;
 }
 
+.remove-item-btn {
+  background-color: #ffe5e5;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.remove-item-btn:hover {
+  background-color: #ffcccc;
+}
 /* ===================== */
 /* Listagem de Usuários  */
 /* ===================== */
