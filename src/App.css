@@ -102,7 +102,7 @@ body {
   border-radius: 8px;
   font-size: 1rem;
   color: var(--dark-color);
-  background-color: var(--light-color);
+  background-color: white;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -414,4 +414,206 @@ body {
     padding: 30px 20px;
     width: 90%;
   }
+}
+
+
+/* ===================== */
+/* Painel do Admin       */
+/* ===================== */
+
+.admin-header {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.admin-nav {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-btn {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.nav-btn:hover {
+  background-color: #5bbf70;
+}
+
+.admin-container {
+  padding: 40px 5%;
+  background-color: var(--light-color);
+}
+
+.admin-section {
+  background-color: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 60px;
+}
+
+.admin-title {
+  color: var(--dark-color);
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-form input {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.admin-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.admin-btn:hover {
+  background-color: #e88a2d;
+}
+
+/* Grid de produtos */
+.admin-produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.admin-produto-card {
+  background-color: var(--light-color);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.admin-produto-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.admin-produto-card h3 {
+  color: var(--dark-color);
+  margin-bottom: 5px;
+}
+
+.admin-produto-card p {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.admin-info {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+}
+
+/* Rolagem suave entre seções */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .admin-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-btn {
+    padding: 8px 12px;
+  }
+
+  .admin-container {
+    padding: 20px;
+  }
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* alinha à direita */
+  gap: 8px;
+  margin-left: auto; /* empurra para a direita */
+}
+
+.quantity-controls button {
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-controls span {
+  font-size: 15px;
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* ===================== */
+/* Listagem de Usuários  */
+/* ===================== */
+
+.admin-usuarios-lista {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.admin-usuario-card {
+  background-color: var(--light-color);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-usuario-card h3 {
+  color: var(--dark-color);
+  margin-bottom: 8px;
+}
+
+.admin-usuario-card p {
+  color: #444;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.admin-info {
+  margin-top: 15px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
 }

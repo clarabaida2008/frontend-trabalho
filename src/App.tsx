@@ -3,6 +3,7 @@ import api from './api/api'
 import { jwtDecode } from "jwt-decode";
 import React, { useState, useEffect } from 'react'
 
+
 // Tipos
 type ProdutoType = {
   _id: string,
@@ -26,12 +27,10 @@ type CarrinhoType = {
 }
 
 function App() {
-  // Estados
   const [produtos, setProdutos] = useState<ProdutoType[]>([]);
   const [carrinho, setCarrinho] = useState<CarrinhoType | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // Busca os produtos cadastrados
   useEffect(() => {
     api.get("/produtos")
       .then((response) => {
@@ -43,7 +42,6 @@ function App() {
       });
   }, []);
 
-  // Busca o carrinho do usuário logado
   useEffect(() => {
     api.get("/carrinho")
       .then((response) => {
@@ -56,27 +54,45 @@ function App() {
       });
   }, []);
 
-  // Função para adicionar produto ao carrinho
   function adicionarItemCarrinho(produtoId: string) {
     api.post("/adicionarItem", { produtoId, quantidade: 1 })
       .then(() => {
         alert("Produto adicionado com sucesso!");
-
-        // Atualiza o carrinho após adicionar
         api.get("/carrinho")
-          .then((response) => {
-            const carrinhoUsuario = response.data
-            setCarrinho(carrinhoUsuario);
-          });
+          .then((response) => setCarrinho(response.data));
       })
       .catch((error) => {
         if (error.response) {
-          console.error(`Servidor respondeu mas com o erro: ${error.response.data.mensagem ?? error.response.data}`);
-          alert(`Erro: ${error.response.data.mensagem ?? "Veja o console para mais informações"}`);
+          console.error(`Erro: ${error.response.data.mensagem ?? error.response.data}`);
+          alert(`Erro: ${error.response.data.mensagem ?? "Veja o console"}`);
         } else {
           console.error(`Erro Axios: ${error.message}`);
-          alert(`Servidor não respondeu. Erro: ${error.message ?? "Erro desconhecido"}`);
+          alert(`Servidor não respondeu. Erro: ${error.message}`);
         }
+      });
+  }
+
+  function removerItem(produtoId: string) {
+    api.post("/removerItem", { produtoId })
+      .then(() => api.get("/carrinho"))
+      .then((response) => setCarrinho(response.data))
+      .catch((error) => {
+        if (error.response) {
+          console.error(`Erro na remoção: ${error.response.data.mensagem ?? error.response.data}`);
+          alert(`Erro ao remover item: ${error.response.data.mensagem ?? "Veja o console"}`);
+        } else {
+          console.error(`Erro Axios: ${error.message}`);
+          alert(`Servidor não respondeu. Erro: ${error.message}`);
+        }
+      });
+  }
+
+  function atualizarQuantidade(produtoId: string, novaQuantidade: number) {
+    api.put("/carrinho/quantidade", { produtoId, quantidade: novaQuantidade })
+      .then(() => api.get("/carrinho").then((response) => setCarrinho(response.data)))
+      .catch((error) => {
+        console.error("Erro ao atualizar quantidade:", error);
+        alert("Erro ao atualizar quantidade. Veja o console.");
       });
   }
 
@@ -95,11 +111,11 @@ function App() {
         {/* Seção de Produtos */}
         <section className="products-section">
           <h2 className="section-title">Nossos Produtos</h2>
-        {/* Campo de busca */}
+
           <input
             type="text"
-             className="search-input"
-            placeholder="Buscar pelo nome do produto"
+            className="search-input"
+            placeholder="Buscar por nome ou categoria..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -112,7 +128,7 @@ function App() {
                   <div className="product-info">
                     <h3 className="product-name">{produto.nome}</h3>
                     <p className="product-description">{produto.descricao}</p>
-                    <p className="product-price">R$ {produto.preco.toFixed(2)}</p>
+                    <p className="product-price">R$ {produto.preco}</p>
                     <button
                       className="add-to-cart-btn"
                       onClick={() => adicionarItemCarrinho(produto._id)}
@@ -147,10 +163,25 @@ function App() {
                           alt={produto.nome}
                           className="cart-item-image"
                         />
+
                         <div className="cart-item-info">
                           <h4>{produto.nome}</h4>
-                          <p>Qtd: {item.quantidade}</p>
                           <p>R$ {(produto.preco * item.quantidade).toFixed(2)}</p>
+                        </div>
+
+                        {/* Controles de quantidade ao lado direito */}
+                        <div className="quantity-controls">
+                          <button onClick={() => atualizarQuantidade(item.produtoId, item.quantidade - 1)}>-</button>
+                          <span>{item.quantidade}</span>
+                          <button onClick={() => atualizarQuantidade(item.produtoId, item.quantidade + 1)}>+</button>
+
+                          <button
+                            className="remove-item-btn"
+                            onClick={() => removerItem(item.produtoId)}
+                            aria-label="Remover item"
+                          >
+                            Remover
+                          </button>
                         </div>
                       </>
                     ) : (
@@ -174,7 +205,5 @@ function App() {
     </>
   );
 }
-
-
 
 export default App;
