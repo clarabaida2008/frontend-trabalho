@@ -1,5 +1,5 @@
 {
-    "rewrites":[
-        {"source":"/api/:path*","destination":"https://one023a-backend-novo-73t6.onrender.com/:path*"}
+    "rewrites": [
+        { "source": "/(.*)", "destination": "/index.html" }
     ]
 }
