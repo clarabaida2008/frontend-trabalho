@@ -83,11 +83,10 @@ function App() {
         if (error.response) {
           console.error(
             `Erro na remoção: ${error.response.data.mensagem ??
-              error.response.data}`
+            error.response.data}`
           );
           alert(
-            `Erro ao remover item: ${
-              error.response.data.mensagem ?? "Veja o console"
+            `Erro ao remover item: ${error.response.data.mensagem ?? "Veja o console"
             }`
           );
         } else {
@@ -249,11 +248,11 @@ function App() {
                           </button>
                         </div>
                         <button
-                            className="removeItem"
-                            onClick={() => removerItem(item.produtoId)}
-                          >
-                            Remover
-                          </button>
+                          className="removeItem"
+                          onClick={() => removerItem(item.produtoId)}
+                        >
+                          Remover
+                        </button>
                       </>
                     ) : (
                       <p>Produto não encontrado.</p>

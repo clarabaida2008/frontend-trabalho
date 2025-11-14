@@ -46,6 +46,8 @@ function Admin() {
 
   const [mensagemUsuarios, setMensagemUsuarios] = useState<string>("");
   const [mensagemCarrinhos, setMensagemCarrinhos] = useState<string>("");
+  const [mensagemEstatisticas, setMensagemEstatisticas] = useState<string>("");
+  const [mostrarEstatisticas, setMostrarEstatisticas] = useState(false);
 
   // Carrega produtos cadastrados
   useEffect(() => {
@@ -143,32 +145,12 @@ function Admin() {
       return;
     }
 
-    // Decodifica o payload do JWT para inspecionar o tipo/role (apenas para debug)
-    try {
-      const payloadPart = token.split(".")[1] || "";
-      const padded = payloadPart.replace(/-/g, "+").replace(/_/g, "/");
-      const jsonPayload = decodeURIComponent(
-        atob(padded)
-          .split("")
-          .map(function (c) {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
-      );
-      const payload = JSON.parse(jsonPayload);
-      console.log("JWT payload (debug):", payload);
-      // Se quiser forçar uma mensagem caso não seja admin, descomente abaixo:
-      // if (!payload?.tipo && !payload?.role && !payload?.isAdmin) setMensagemCarrinhos('Aviso: token sem claim de admin.');
-    } catch (e) {
-      console.warn("Não foi possível decodificar o JWT para debug", e);
-    }
 
     // Envia explicitamente o header Authorization para garantir que o backend receba o token
     api
-      .get("/carrinhos", { headers: { Authorization: `Bearer ${token}` } })
+      .get("/listarCarrinhos", { headers: { Authorization: `Bearer ${token}` } })
       .then((response) => {
         setCarrinhos(response.data);
-        calcularMetricas(response.data); // <-- CHAMANDO AS MÉTRICAS
         setMensagemCarrinhos("");
       })
       .catch((error) => {
@@ -181,6 +163,57 @@ function Admin() {
             ? "Acesso negado: apenas administradores podem listar carrinhos. (403)"
             : "Erro ao buscar carrinhos. Verifique console e se o token é de admin.");
         setMensagemCarrinhos(msg);
+      });
+  }
+
+  // Carregar estatísticas (ADMIN)
+  function carregarEstatisticas() {
+    setMensagemEstatisticas("Carregando estatísticas...");
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setMensagemEstatisticas("Usuário não autenticado. Faça login.");
+      return;
+    }
+
+    // Busca os carrinhos para calcular as métricas
+    api
+      .get("/listarCarrinhos", { headers: { Authorization: `Bearer ${token}` } })
+      .then((response) => {
+        calcularMetricas(response.data);
+        setMostrarEstatisticas(true);
+        setMensagemEstatisticas("");
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar estatísticas:", error);
+        const status = error?.response?.status;
+        const msgFromBackend = error?.response?.data?.mensagem;
+        const msg =
+          msgFromBackend ||
+          (status === 403
+            ? "Acesso negado: apenas administradores podem acessar estatísticas. (403)"
+            : "Erro ao carregar estatísticas. Verifique console e se o token é de admin.");
+        setMensagemEstatisticas(msg);
+      });
+  }
+
+  // Função para excluir um carrinho
+  function excluirCarrinhoAdmin(usuarioId: string) {
+    if (!window.confirm("Tem certeza que deseja excluir este carrinho?")) {
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    api.delete(`/carrinho/${usuarioId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(() => {
+        setCarrinhos(carrinhos.filter((c) => c.usuarioId !== usuarioId));
+        alert("Carrinho excluído com sucesso!");
+      })
+      .catch((error) => {
+        console.error("Erro ao excluir carrinho:", error);
+        alert(error?.response?.data?.mensagem || "Erro ao excluir carrinho.");
       });
   }
 
@@ -210,6 +243,10 @@ function Admin() {
 
           <button onClick={() => scrollToSection("carrinhos")} className="nav-btn">
             Listar Carrinhos
+          </button>
+
+          <button onClick={() => scrollToSection("estatisticas")} className="nav-btn">
+            Estatísticas
           </button>
         </nav>
       </header>
@@ -276,13 +313,52 @@ function Admin() {
             Listar Todos os Carrinhos
           </button>
 
-          {mensagemCarrinhos && <p className="admin-info">{mensagemCarrinhos}</p>}
-
-          {/* ESTATÍSTICAS / MÉTRICAS */}
           {!!carrinhos.length && (
-            <div className="admin-metricas">
-              <h2 className="admin-title">📊 Estatísticas do Sistema</h2>
+            <div className="admin-carrinhos-lista">
+              {carrinhos.map((c) => (
+                <div key={c._id} className="admin-carrinho-card">
+                  <h3>Carrinho de {c.nomeUsuario}</h3>
 
+                  <p>
+                    <strong>Última atualização:</strong>{" "}
+                    {new Date(c.dataAtualizacao).toLocaleString()}
+                  </p>
+                  <p><strong>Total:</strong> R$ {c.total}</p>
+                  <p><strong>Itens:</strong> {c.itens.length}</p>
+
+                  <hr style={{ margin: "10px 0" }} />
+
+                  {c.itens.map((item, i) => (
+                    <p key={i}>• {item.nome} — {item.quantidade} un</p>
+                  ))}
+
+                  <button
+                    onClick={() => excluirCarrinhoAdmin(c.usuarioId)}
+                    className="admin-btn-excluir"
+                    style={{ marginTop: "10px", backgroundColor: "#dd731f" }}
+                  >
+                    Excluir Carrinho
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {mensagemCarrinhos && <p className="admin-info">{mensagemCarrinhos}</p>}
+
+        {/* ESTATÍSTICAS / MÉTRICAS */}
+        <section id="estatisticas" className="admin-section">
+          <h1 className="admin-title">Estatísticas do Sistema</h1>
+
+          <button onClick={carregarEstatisticas} className="admin-btn">
+            Carregar Estatísticas
+          </button>
+
+          {mensagemEstatisticas && <p className="admin-info">{mensagemEstatisticas}</p>}
+
+          {mostrarEstatisticas && (
+            <div className="admin-metricas">
               <div className="admin-metricas-grid">
 
                 <div className="admin-metrica-card">
@@ -310,36 +386,10 @@ function Admin() {
                     <p>Nenhum item registrado.</p>
                   )}
                 </div>
-
               </div>
             </div>
           )}
-
-          {/* LISTA DOS CARRINHOS */}
-          {!!carrinhos.length && (
-            <div className="admin-carrinhos-lista">
-              {carrinhos.map((c) => (
-                <div key={c._id} className="admin-carrinho-card">
-                  <h3>Carrinho de {c.nomeUsuario}</h3>
-
-                  <p>
-                    <strong>Última atualização:</strong>{" "}
-                    {new Date(c.dataAtualizacao).toLocaleString()}
-                  </p>
-                  <p><strong>Total:</strong> R$ {c.total}</p>
-                  <p><strong>Itens:</strong> {c.itens.length}</p>
-
-                  <hr style={{ margin: "10px 0" }} />
-
-                  {c.itens.map((item, i) => (
-                    <p key={i}>• {item.nome} — {item.quantidade} un</p>
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
         </section>
-
       </main>
     </>
   );
