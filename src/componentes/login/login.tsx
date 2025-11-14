@@ -31,7 +31,7 @@ function Login() {
   return (
     <div className="login-page">
       <div className="header">
-        <img src="./imagens/logo.png" alt="Floricultura Logo" className="logo" />
+        <img src="./logo.png" alt="Floricultura Logo" className="logo" />
       </div>
 
       <div className="login-container">
