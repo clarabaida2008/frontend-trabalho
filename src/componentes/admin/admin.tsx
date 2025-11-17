@@ -313,6 +313,8 @@ function Admin() {
             Listar Todos os Carrinhos
           </button>
 
+          {mensagemCarrinhos && <p className="admin-info">{mensagemCarrinhos}</p>}
+
           {!!carrinhos.length && (
             <div className="admin-carrinhos-lista">
               {carrinhos.map((c) => (
@@ -344,8 +346,6 @@ function Admin() {
             </div>
           )}
         </section>
-
-        {mensagemCarrinhos && <p className="admin-info">{mensagemCarrinhos}</p>}
 
         {/* ESTATÍSTICAS / MÉTRICAS */}
         <section id="estatisticas" className="admin-section">
