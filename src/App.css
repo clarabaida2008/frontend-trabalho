@@ -768,3 +768,184 @@ html {
   background-color: var(--primary-color);
   color: white;
 }
+
+/* ===================== */
+/*   PÁGINA DE PAGAMENTO */
+/* ===================== */
+
+.pagamento-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: var(--light-color);
+  min-height: 100vh;
+  padding-top: 130px;
+  padding-bottom: 40px;
+}
+
+.pagamento-container {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+.pagamento-title {
+  color: var(--dark-color);
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--accent-color);
+}
+
+.pagamento-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--dark-color);
+  font-size: 0.95rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* Estilização dos elementos do Stripe */
+.StripeElement {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.StripeElement--focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(27, 136, 49, 0.2);
+  outline: none;
+}
+
+.StripeElement--invalid {
+  border-color: #e63946;
+}
+
+.StripeElement--complete {
+  border-color: var(--accent-color);
+}
+
+/* Área do total */
+.pagamento-total {
+  background-color: var(--light-color);
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.pagamento-total strong {
+  color: var(--dark-color);
+  font-size: 1.1rem;
+}
+
+.pagamento-total-valor {
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-top: 5px;
+}
+
+/* Botão de pagamento */
+.pagamento-btn {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.pagamento-btn:hover:not(:disabled) {
+  background-color: #5bbf70;
+}
+
+.pagamento-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Status da transação */
+.pagamento-status {
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.pagamento-status.success {
+  background-color: #e7f6e9;
+  color: #1b8831;
+  border: 1px solid #c1e7c8;
+}
+
+.pagamento-status.error {
+  background-color: #ffe5e5;
+  color: #e63946;
+  border: 1px solid #ffcccc;
+}
+
+.pagamento-status.info {
+  background-color: #e5f3ff;
+  color: #1a73e8;
+  border: 1px solid #c2e0ff;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .pagamento-page {
+    padding-top: 110px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .pagamento-container {
+    padding: 25px;
+    width: 100%;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagamento-container {
+    padding: 20px 15px;
+  }
+  
+  .pagamento-title {
+    font-size: 1.3rem;
+  }
+}

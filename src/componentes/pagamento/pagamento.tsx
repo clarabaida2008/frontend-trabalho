@@ -48,36 +48,96 @@ export default function CartaoPagamento() {
       .catch(() => setCartTotal(null));
   }, []);
 
+  const getStatusClass = () => {
+    if (status.includes("Erro") || status.includes("erro")) return "error";
+    if (status.includes("aprovado")) return "success";
+    return "info";
+  };
 
   return (
-    <div>
-      <div>
-        <div>
-          <label htmlFor="card-number">Número do cartão</label>
-          <CardNumberElement id="card-number" />
-        </div>
-
-        <div>
-          <div>
-            <label htmlFor="card-expiry">Validade</label>
-            <CardExpiryElement id="card-expiry" />
+    <div className="pagamento-page">
+      <div className="pagamento-container">
+        <h2 className="pagamento-title">Pagamento com Cartão</h2>
+        
+        <div className="pagamento-form">
+          <div className="form-group">
+            <label htmlFor="card-number">Número do cartão</label>
+            <CardNumberElement 
+              id="card-number" 
+              options={{
+                style: {
+                  base: {
+                    fontSize: '16px',
+                    color: '#333',
+                    '::placeholder': {
+                      color: '#999',
+                    },
+                  },
+                },
+              }}
+            />
           </div>
 
-          <div>
-            <label htmlFor="card-cvc">CVC</label>
-            <CardCvcElement id="card-cvc" />
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="card-expiry">Validade</label>
+              <CardExpiryElement 
+                id="card-expiry" 
+                options={{
+                  style: {
+                    base: {
+                      fontSize: '16px',
+                      color: '#333',
+                      '::placeholder': {
+                        color: '#999',
+                      },
+                    },
+                  },
+                }}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="card-cvc">CVC</label>
+              <CardCvcElement 
+                id="card-cvc" 
+                options={{
+                  style: {
+                    base: {
+                      fontSize: '16px',
+                      color: '#333',
+                      '::placeholder': {
+                        color: '#999',
+                      },
+                    },
+                  },
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div style={{ margin: "10px 0" }}>
-        <strong>Valor a pagar:</strong>{" "}
-        {cartTotal !== null ? `R$ ${cartTotal.toFixed(2)}` : "—"}
-      </div>
 
-      <button onClick={pagar} disabled={loading} >
-        {loading ? "Processando..." : "Pagar"}
-      </button>
-      {status && <p>{status}</p>}
+        <div className="pagamento-total">
+          <div><strong>Valor a pagar:</strong></div>
+          <div className="pagamento-total-valor">
+            {cartTotal !== null ? `R$ ${cartTotal.toFixed(2)}` : "—"}
+          </div>
+        </div>
+
+        <button 
+          className="pagamento-btn" 
+          onClick={pagar} 
+          disabled={loading || !stripe}
+        >
+          {loading ? "Processando..." : "Confirmar Pagamento"}
+        </button>
+
+        {status && (
+          <div className={`pagamento-status ${getStatusClass()}`}>
+            {status}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
