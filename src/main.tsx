@@ -18,7 +18,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/finalizar-compra" element={<Elements stripe={stripe}><CartaoPagamento/></Elements>} />
+        <Route path="/pagamento" element={<Elements stripe={stripe}><CartaoPagamento/></Elements>} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

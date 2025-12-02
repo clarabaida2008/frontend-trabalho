@@ -1,6 +1,7 @@
 import "./App.css";
 import api from "./api/api";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Tipos
 type ProdutoType = {
@@ -28,6 +29,7 @@ function App() {
   const [produtos, setProdutos] = useState<ProdutoType[]>([]);
   const [carrinho, setCarrinho] = useState<CarrinhoType | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const navigate = useNavigate();
 
   // Buscar produtos
   useEffect(() => {
@@ -276,7 +278,12 @@ function App() {
             🗑️ Excluir Carrinho
           </button>
 
-          <button className="checkout-btn">Finalizar Compra</button>
+          <button
+            className="checkout-btn"
+            onClick={() => navigate("/pagamento")}
+          >
+            Finalizar Compra
+          </button>
         </section>
       </div>
     </>
